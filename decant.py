@@ -14,7 +14,6 @@ parser.add_argument('-n', '--native-command', default=None,
 parser.add_argument('-w', '--wine-command',
                     help='wine command to run in the chosen prefix')
 
-
 args = parser.parse_args()
 
 
@@ -45,11 +44,6 @@ else:
     wine_command = app_config['wine_command']
 
 wine_prefix = app_config['wine_prefix']
-
-#wine_command = wine_command.replace(' ', '\ ')
-#wine_command = wine_command.replace('(', '\(')
-#wine_command = wine_command.replace(')', '\)')
-print(wine_command)
 
 command = 'WINEPREFIX={} {} {}'. format(wine_prefix,
                                         native_command,
