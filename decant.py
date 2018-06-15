@@ -48,6 +48,4 @@ wine_env = 'WINEPREFIX={} '.format(app_config['wine_prefix'])
 if 'wine_env' in app_config:
     wine_env += app_config['wine_env']
 
-command = '{} {} {}'.format(wine_env, native_command, wine_command)
-
-os.system(command)
+os.system('{} {} {}'.format(wine_env, native_command, wine_command))
