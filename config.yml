@@ -1,0 +1,8 @@
+app_name:
+  wine_prefix: ""
+  wine_command: ""
+  notes: ""
+witcher-3:
+  wine_prefix: "~/.wine-dxvk"
+  wine_command: "'/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe' -applaunch 292030"
+  notes: "working with wine-3.10 (Staging)/dxvk-0.54"
