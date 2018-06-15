@@ -7,6 +7,7 @@ witcher-3:
   wine_command: "'/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe' -applaunch 292030"
   notes: "working with wine-3.10 (Staging)/dxvk-0.54"
 overwatch:
+  wine_env: "WINEDEBUG=-all"
   wine_prefix: "~/.wine-dxvk"
   wine_command: "'/media/Games/GamesLinux/dxvk/Games/Overwatch/Overwatch.exe'"
   notes: "working with wine-3.10 (Staging)/dxvk-0.54. use wine built-in for dxgi/d3d11 during install"
