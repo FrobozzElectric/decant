@@ -43,10 +43,11 @@ if args.wine_command:
 else:
     wine_command = app_config['wine_command']
 
-wine_prefix = app_config['wine_prefix']
+wine_env = 'WINEPREFIX={} '.format(app_config['wine_prefix'])
 
-command = 'WINEPREFIX={} {} {}'. format(wine_prefix,
-                                        native_command,
-                                        wine_command)
+if 'wine_env' in app_config:
+    wine_env += app_config['wine_env']
+
+command = '{} {} {}'.format(wine_env, native_command, wine_command)
 
 os.system(command)

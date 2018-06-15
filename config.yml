@@ -10,3 +10,8 @@ overwatch:
   wine_prefix: "~/.wine-dxvk"
   wine_command: "'/media/Games/GamesLinux/dxvk/Games/Overwatch/Overwatch.exe'"
   notes: "working with wine-3.10 (Staging)/dxvk-0.54. use wine built-in for dxgi/d3d11 during install"
+overwatch-launcher:
+  wine_env: 'WINEDLLOVERRIDES="dxgi,d3d11=b"'
+  wine_prefix: "~/.wine-dxvk"
+  wine_command: "'/media/Games/GamesLinux/dxvk/Games/Overwatch/Overwatch Launcher.exe'"
+  notes: "working with wine-3.10 (Staging)/dxvk-0.54. use wine built-in for dxgi/d3d11 during install"
