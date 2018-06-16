@@ -16,7 +16,7 @@ parser.add_argument('-c', '--config', default='{}/config.yml'.format(config_dir)
                     help='config file location')
 parser.add_argument('-l', '--log-dir', default='{}/log'.format(config_dir),
                     help='log directory location')
-parser.add_argument('-n', '--native-command', default=None,
+parser.add_argument('-n', '--native-command', default='wine',
                     help='native command to run in the chosen prefix')
 parser.add_argument('-w', '--wine-command',
                     help='wine command to run in the chosen prefix')
@@ -56,11 +56,6 @@ wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
 if 'wine_env' in app_config:
     wine_env += ' {}'.format(app_config['wine_env'])
 
-if args.native_command:
-    native_command = args.native_command
-else:
-    native_command = 'wine'
-
 if args.wine_command:
     wine_command = '"{}"'.format(args.wine_command)
 else:
@@ -71,7 +66,7 @@ if 'wine_command_args' in app_config:
 
 log = os.path.expanduser('{}/{}.log'.format(args.log_dir, args.app))
 
-cmd = '{} {} {} > {} 2>&1'.format(wine_env, native_command, wine_command, log)
+cmd = '{} {} {} > {} 2>&1'.format(wine_env, args.native_command, wine_command, log)
 
 if args.show_command:
     sys.stderr.write('executing command: {}\n'.format(cmd))
