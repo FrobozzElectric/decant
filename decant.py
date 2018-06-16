@@ -9,8 +9,8 @@ parser = ArgumentParser()
 parser.add_argument('app', nargs='?', help='name of app to run')
 parser.add_argument('-c', '--config', default='~/.decant/config.yml',
                     help='config file location')
-parser.add_argument('-l', '--log', default='~/.decant/decant.log',
-                    help='log file location')
+parser.add_argument('-l', '--log-dir', default='~/.decant/log',
+                    help='log directory location')
 parser.add_argument('-n', '--native-command', default=None,
                     help='native command to run in the chosen prefix')
 parser.add_argument('-w', '--wine-command',
@@ -64,7 +64,7 @@ else:
 if 'wine_command_args' in app_config:
     wine_command += ' {}'.format(app_config['wine_command_args'])
 
-log = os.path.expanduser(args.log)
+log = os.path.expanduser('{}/{}.log'.format(args.log_dir, args.app))
 
 cmd = '{} {} {} > {} 2>&1'.format(wine_env, native_command, wine_command, log)
 
