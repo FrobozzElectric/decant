@@ -1,9 +1,3 @@
-witcher-3:
-  wine_env: 'DXVK_HUD=fps'
-  wine_prefix: '~/.wine-dxvk'
-  wine_command: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
-  wine_command_args: '-applaunch 292030'
-  notes: 'working with wine-3.10 (Staging)/dxvk-0.54'
 eye:
   wine_env: 'WINEDLLOVERRIDES="dxgi,d3d11=b"'
   wine_prefix: '~/.wine-dxvk'
@@ -19,3 +13,15 @@ overwatch-launcher:
   wine_prefix: '~/.wine-dxvk'
   wine_command: '/media/Games/GamesLinux/dxvk/Games/Overwatch/Overwatch Launcher.exe'
   notes: 'working with wine-3.10 (Staging)/dxvk-0.54. use wine built-in for dxgi/d3d11 during install'
+warframe:
+  wine_env: 'DXVK_HUD=fps'
+  wine_prefix: '~/.wine-dxvk'
+  wine_command: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
+  wine_command_args: '-applaunch 230410'
+  notes: 'working with wine-3.10 (Staging)/dxvk-0.54'
+witcher-3:
+  wine_env: 'DXVK_HUD=fps'
+  wine_prefix: '~/.wine-dxvk'
+  wine_command: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
+  wine_command_args: '-applaunch 292030'
+  notes: 'working with wine-3.10 (Staging)/dxvk-0.54'

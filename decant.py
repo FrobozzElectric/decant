@@ -15,6 +15,8 @@ parser.add_argument('-n', '--native-command', default=None,
                     help='native command to run in the chosen prefix')
 parser.add_argument('-w', '--wine-command',
                     help='wine command to run in the chosen prefix')
+parser.add_argument('-s', '--show-command', action='store_true',
+                    help='show constructed wine command')
 args = parser.parse_args()
 
 
@@ -64,4 +66,9 @@ if 'wine_command_args' in app_config:
 
 log = os.path.expanduser(args.log)
 
-os.system('{} {} {} > {} 2>&1'.format(wine_env, native_command, wine_command, log))
+cmd = '{} {} {} > {} 2>&1'.format(wine_env, native_command, wine_command, log)
+
+if args.show_command:
+    sys.stderr.write('executing command: {}\n'.format(cmd))
+
+os.system(cmd)
