@@ -38,11 +38,20 @@ def read_user_config(user_config, app=None):
             sys.exit(1)
 
 
+log_dir = os.path.expanduser(args.log_dir)
+
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
 config = os.path.expanduser(args.config)
 
+if not os.path.exists(config):
+    sys.stderr.write('config file not found: {}\n'.format(config))
+    sys.exit(1)
+
 if not args.app:
-    for item in read_user_config(config):
-        sys.stderr.write('{}\n'.format(item))
+    for app in read_user_config(config):
+        sys.stderr.write('{}\n'.format(app))
     sys.exit(0)
 
 app_config = read_user_config(config, app=args.app)
@@ -64,7 +73,7 @@ else:
 if 'wine_cmd_args' in app_config:
     wine_cmd += ' {}'.format(app_config['wine_cmd_args'])
 
-log = os.path.expanduser('{}/{}.log'.format(args.log_dir, args.app))
+log = '{}/{}.log'.format(log_dir, args.app)
 
 cmd = '{} {} {} > {} 2>&1'.format(wine_env, args.native_cmd, wine_cmd, log)
 
