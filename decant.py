@@ -6,21 +6,21 @@ import yaml
 from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
 if not os.environ.get('XDG_CONFIG_HOME'):
-    config_dir = '~/.config/decant'
+    conf_dir = '~/.config/decant'
 else:
-    config_dir = '{}/decant'.format(os.environ['XDG_CONFIG_HOME'])
+    conf_dir = '{}/decant'.format(os.environ['XDG_CONFIG_HOME'])
 
 parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument('app', nargs='?', help='name of app to run')
-parser.add_argument('-c', '--config', default='{}/config.yml'.format(config_dir),
+parser.add_argument('-c', '--config', default='{}/config.yml'.format(conf_dir),
                     help='config file location')
-parser.add_argument('-l', '--log-dir', default='{}/log'.format(config_dir),
+parser.add_argument('-l', '--log-dir', default='{}/log'.format(conf_dir),
                     help='log directory location')
-parser.add_argument('-n', '--native-command', default='wine',
+parser.add_argument('-n', '--native-cmd', default='wine',
                     help='native command to run in the chosen prefix')
-parser.add_argument('-w', '--wine-command',
+parser.add_argument('-w', '--wine-cmd',
                     help='wine command to run in the chosen prefix')
-parser.add_argument('-s', '--show-command', action='store_true',
+parser.add_argument('-s', '--show-cmd', action='store_true',
                     help='show constructed wine command')
 args = parser.parse_args()
 
@@ -56,19 +56,19 @@ wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
 if 'wine_env' in app_config:
     wine_env += ' {}'.format(app_config['wine_env'])
 
-if args.wine_command:
-    wine_command = '"{}"'.format(args.wine_command)
+if args.wine_cmd:
+    wine_cmd = '"{}"'.format(args.wine_cmd)
 else:
-    wine_command = '"{}"'.format(app_config['wine_command'])
+    wine_cmd = '"{}"'.format(app_config['wine_cmd'])
 
-if 'wine_command_args' in app_config:
-    wine_command += ' {}'.format(app_config['wine_command_args'])
+if 'wine_cmd_args' in app_config:
+    wine_cmd += ' {}'.format(app_config['wine_cmd_args'])
 
 log = os.path.expanduser('{}/{}.log'.format(args.log_dir, args.app))
 
-cmd = '{} {} {} > {} 2>&1'.format(wine_env, args.native_command, wine_command, log)
+cmd = '{} {} {} > {} 2>&1'.format(wine_env, args.native_cmd, wine_cmd, log)
 
-if args.show_command:
+if args.show_cmd:
     sys.stderr.write('executing command: {}\n'.format(cmd))
 
 os.system(cmd)
