@@ -1,4 +1,5 @@
 witcher-3:
+  wine_env: 'DXVK_HUD=fps'
   wine_prefix: '~/.wine-dxvk'
   wine_command: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
   wine_command_args: '-applaunch 292030'
