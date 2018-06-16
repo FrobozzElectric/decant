@@ -3,13 +3,18 @@
 import os
 import sys
 import yaml
-from argparse import ArgumentParser
+from argparse import ArgumentParser, ArgumentDefaultsHelpFormatter
 
-parser = ArgumentParser()
+if not os.environ.get('XDG_CONFIG_HOME'):
+    config_dir = '~/.config/decant'
+else:
+    config_dir = '{}/decant'.format(os.environ['XDG_CONFIG_HOME'])
+
+parser = ArgumentParser(formatter_class=ArgumentDefaultsHelpFormatter)
 parser.add_argument('app', nargs='?', help='name of app to run')
-parser.add_argument('-c', '--config', default='~/.decant/config.yml',
+parser.add_argument('-c', '--config', default='{}/config.yml'.format(config_dir),
                     help='config file location')
-parser.add_argument('-l', '--log-dir', default='~/.decant/log',
+parser.add_argument('-l', '--log-dir', default='{}/log'.format(config_dir),
                     help='log directory location')
 parser.add_argument('-n', '--native-command', default=None,
                     help='native command to run in the chosen prefix')
