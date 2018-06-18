@@ -66,9 +66,17 @@ if 'wine_env' in app_config:
     wine_env += ' {}'.format(app_config['wine_env'])
 
 if args.wine_cmd:
-    wine_cmd = '"{}"'.format(args.wine_cmd)
+    wine_cmd = '{}'.format(args.wine_cmd)
 else:
-    wine_cmd = '"{}"'.format(app_config['wine_cmd'])
+    wine_cmd = '{}'.format(app_config['wine_cmd'])
+
+wine_cmd = os.path.expanduser(wine_cmd)
+
+if not os.path.exists(wine_cmd):
+    sys.stderr.write('wine command not found: {}'.format(wine_cmd))
+    sys.exit(1)
+
+wine_cmd = '"{}"'.format(wine_cmd)
 
 if 'wine_cmd_args' in app_config:
     wine_cmd += ' {}'.format(app_config['wine_cmd_args'])

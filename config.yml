@@ -1,7 +1,7 @@
 eye:
   wine_env: 'WINEDLLOVERRIDES="dxgi,d3d11=b"'
   wine_prefix: '~/.wine-dxvk'
-  wine_cmd: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
+  wine_cmd: '~/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
   wine_cmd_args: '-applaunch 91700'
   notes: 'working with wine-3.10 (Staging)/dxvk-0.54'
 overwatch:
@@ -16,12 +16,12 @@ overwatch-launcher:
 warframe:
   wine_env: 'DXVK_HUD=fps'
   wine_prefix: '~/.wine-dxvk'
-  wine_cmd: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
+  wine_cmd: '~/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
   wine_cmd_args: '-applaunch 230410'
   notes: 'working with wine-3.10 (Staging)/dxvk-0.54'
 witcher-3:
   wine_env: 'DXVK_HUD=fps'
   wine_prefix: '~/.wine-dxvk'
-  wine_cmd: '/home/graham/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
+  wine_cmd: '~/.wine-dxvk/drive_c/Program Files (x86)/Steam/Steam.exe'
   wine_cmd_args: '-applaunch 292030'
   notes: 'working with wine-3.10 (Staging)/dxvk-0.54'
