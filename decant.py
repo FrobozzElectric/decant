@@ -86,7 +86,7 @@ log = '{}/{}.log'.format(log_dir, args.app)
 cmd = '{} {} {} > {} 2>&1'.format(wine_env, args.native_cmd, wine_cmd, log)
 
 if 'pre_cmd' in app_config:
-    os.system(pre_cmd)
+    os.system(app_config['pre_cmd'])
 
 if args.show_cmd:
     sys.stderr.write('executing command: {}\n'.format(cmd))
@@ -94,4 +94,4 @@ if args.show_cmd:
 os.system(cmd)
 
 if 'post_cmd' in app_config:
-    os.system(post_cmd)
+    os.system(app_config['post_cmd'])
