@@ -29,39 +29,41 @@ class Runner:
 
     def __init__(self, app_config):
         self.config = app_config
-        self.wine_env = 'WINEPREFIX={} {}'.format(app_config['wine_prefix'],
-                                                  app_config.get('wine_env'))
-        self.wine_cmds = app_config['wine_cmd']
+        self.wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
         self.pre_cmds = app_config.get('pre_cmd', [])
+        self.wine_cmd = '{}'.format(app_config['wine_cmd'])
         self.post_cmds = app_config.get('post_cmd', [])
-        self.log = ''
+        self.log = None
 
-    def construct_wine_cmds(self):
+    def construct_wine_env(self):
+        for env in self.config.get('wine_env', []):
+            self.wine_env += ' {}'.format(env)
+
+    def construct_wine_cmd(self):
         cmd_base = '{} {} {} > {} 2>&1'
-        for i, wine_cmd in enumerate(self.wine_cmds):
-            cmd = os.path.expanduser(wine_cmd['cmd'])
-            if not os.path.exists(cmd):
-                sys.stderr.write('wine command not found: {}'.format(cmd))
-                sys.exit(1)
-            if 'arg' in wine_cmd:
-                cmd = '"{}" {}'.format(cmd, wine_cmd['arg'])
-            else:
-                cmd = '"{}"'.format(cmd)
-            cmd = cmd_base.format(self.wine_env, 'wine', cmd, self.log)
-            self.wine_cmds[i] = cmd
-
-    def exec_wine_cmds(self):
-        self.construct_wine_cmds()
-        for cmd in self.wine_cmds:
-            if args.show_cmd:
-                sys.stderr.write('executing wine command: {}\n'.format(cmd))
-            os.system(cmd)
+        cmd = os.path.expanduser(self.wine_cmd)
+        if not os.path.exists(cmd):
+            sys.stderr.write('wine command not found: {}'.format(cmd))
+            sys.exit(1)
+        if 'wine_cmd_arg' in self.config:
+            cmd = '"{}" {}'.format(cmd, self.config['wine_cmd_arg'])
+        else:
+            cmd = '"{}"'.format(cmd)
+        cmd = cmd_base.format(self.wine_env, 'wine', cmd, self.log)
+        self.wine_cmd = cmd
 
     def exec_pre_cmds(self):
         for cmd in self.pre_cmds:
             if args.show_cmd:
                 sys.stderr.write('executing pre command: {}\n'.format(cmd))
             os.system(cmd)
+
+    def exec_wine_cmd(self):
+        self.construct_wine_env()
+        self.construct_wine_cmd()
+        if args.show_cmd:
+            sys.stderr.write('executing wine command: {}\n'.format(self.wine_cmd))
+        os.system(self.wine_cmd)
 
     def exec_post_cmds(self):
         for cmd in self.post_cmds:
@@ -110,5 +112,5 @@ if not os.path.exists(log_dir):
 runner.log = '{}/{}.log'.format(log_dir, args.app)
 
 runner.exec_pre_cmds()
-runner.exec_wine_cmds()
+runner.exec_wine_cmd()
 runner.exec_post_cmds()
