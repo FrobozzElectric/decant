@@ -1,0 +1,13 @@
+example-app:
+  wine_env: 'DXVK_HUD=fps'
+  wine_prefix: '~/.wine-dxvk'
+  pre_cmd:
+    - 'echo pre cmd'
+    - 'echo pre cmd 2'
+  wine_cmd: 
+    - 
+      cmd: '~/.wine-dxvk/drive_c/windows/system32/ping.exe'
+      arg: 'google.com'
+  post_cmd:
+    - 'echo post cmd'
+  notes: 'this is an example app'

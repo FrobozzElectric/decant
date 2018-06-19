@@ -16,13 +16,59 @@ parser.add_argument('-c', '--config', default='{}/config.yml'.format(conf_dir),
                     help='config file location')
 parser.add_argument('-l', '--log-dir', default='{}/log'.format(conf_dir),
                     help='log directory location')
-parser.add_argument('-n', '--native-cmd', default='wine',
-                    help='native command to run in the chosen prefix')
+parser.add_argument('-n', '--native-cmd', default=None,
+                    help='run native command in the chosen prefix and exit')
 parser.add_argument('-w', '--wine-cmd',
                     help='wine command to run in the chosen prefix')
 parser.add_argument('-s', '--show-cmd', action='store_true',
                     help='show constructed wine command')
 args = parser.parse_args()
+
+
+class Runner:
+
+    def __init__(self, app_config):
+        print(app_config)
+        self.config = app_config
+        self.wine_env = 'WINEPREFIX={} {}'.format(app_config['wine_prefix'],
+                                                  app_config.get('wine_env'))
+        self.wine_cmds = app_config['wine_cmd']
+        self.pre_cmds = app_config.get('pre_cmd')
+        self.post_cmds = app_config.get('post_cmd')
+        self.log = ''
+
+    def construct_wine_cmds(self):
+        cmd_base = '{} {} {} > {} 2>&1'
+        for i, wine_cmd in enumerate(self.wine_cmds):
+            cmd = os.path.expanduser(wine_cmd['cmd'])
+            if not os.path.exists(cmd):
+                sys.stderr.write('wine command not found: {}'.format(cmd))
+                sys.exit(1)
+            if 'arg' in wine_cmd:
+                cmd = '"{}" {}'.format(cmd, wine_cmd['arg'])
+            else:
+                cmd = '"{}"'.format(cmd)
+            cmd = cmd_base.format(self.wine_env, 'wine', cmd, self.log)
+            self.wine_cmds[i] = cmd
+
+    def exec_wine_cmds(self):
+        self.construct_wine_cmds()
+        for cmd in self.wine_cmds:
+            if args.show_cmd:
+                sys.stderr.write('executing wine command: {}\n'.format(cmd))
+            os.system(cmd)
+
+    def exec_pre_cmds(self):
+        for cmd in self.pre_cmds:
+            if args.show_cmd:
+                sys.stderr.write('executing pre command: {}\n'.format(cmd))
+            os.system(cmd)
+
+    def exec_post_cmds(self):
+        for cmd in self.post_cmds:
+            if args.show_cmd:
+                sys.stderr.write('executing post command: {}\n'.format(cmd))
+            os.system(cmd)
 
 
 def read_user_config(user_config, app=None):
@@ -37,11 +83,6 @@ def read_user_config(user_config, app=None):
             sys.stderr.write(str(error))
             sys.exit(1)
 
-
-log_dir = os.path.expanduser(args.log_dir)
-
-if not os.path.exists(log_dir):
-    os.makedirs(log_dir)
 
 config = os.path.expanduser(args.config)
 
@@ -60,42 +101,15 @@ if not app_config:
     sys.stderr.write('app not found "{}"\n'.format(args.app))
     sys.exit(1)
 
-wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
+runner = Runner(app_config)
 
-if 'wine_env' in app_config:
-    wine_env += ' {}'.format(app_config['wine_env'])
+log_dir = os.path.expanduser(args.log_dir)
 
-if args.wine_cmd:
-    wine_cmd = '{}'.format(args.wine_cmd)
-else:
-    wine_cmd = '{}'.format(app_config['wine_cmd'])
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
 
-wine_cmd = os.path.expanduser(wine_cmd)
+runner.log = '{}/{}.log'.format(log_dir, args.app)
 
-if not os.path.exists(wine_cmd):
-    sys.stderr.write('wine command not found: {}'.format(wine_cmd))
-    sys.exit(1)
-
-wine_cmd = '"{}"'.format(wine_cmd)
-
-if 'wine_cmd_args' in app_config:
-    wine_cmd += ' {}'.format(app_config['wine_cmd_args'])
-
-log = '{}/{}.log'.format(log_dir, args.app)
-
-cmd = '{} {} {} > {} 2>&1'.format(wine_env, args.native_cmd, wine_cmd, log)
-
-if 'pre_cmd' in app_config:
-    if args.show_cmd:
-        sys.stderr.write('executing pre command: {}\n'.format(app_config['pre_cmd']))
-    os.system(app_config['pre_cmd'])
-
-if args.show_cmd:
-    sys.stderr.write('executing main command: {}\n'.format(cmd))
-
-os.system(cmd)
-
-if 'post_cmd' in app_config:
-    if args.show_cmd:
-        sys.stderr.write('executing post command: {}\n'.format(app_config['post_cmd']))
-    os.system(app_config['post_cmd'])
+runner.exec_pre_cmds()
+runner.exec_wine_cmds()
+runner.exec_post_cmds()
