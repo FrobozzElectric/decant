@@ -28,13 +28,12 @@ args = parser.parse_args()
 class Runner:
 
     def __init__(self, app_config):
-        print(app_config)
         self.config = app_config
         self.wine_env = 'WINEPREFIX={} {}'.format(app_config['wine_prefix'],
                                                   app_config.get('wine_env'))
         self.wine_cmds = app_config['wine_cmd']
-        self.pre_cmds = app_config.get('pre_cmd')
-        self.post_cmds = app_config.get('post_cmd')
+        self.pre_cmds = app_config.get('pre_cmd', [])
+        self.post_cmds = app_config.get('post_cmd', [])
         self.log = ''
 
     def construct_wine_cmds(self):
