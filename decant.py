@@ -55,21 +55,28 @@ class Runner:
     def exec_pre_cmds(self):
         for cmd in self.pre_cmds:
             if args.show_cmd:
-                sys.stderr.write('executing pre command: {}\n'.format(cmd))
+                sys.stderr.write('executing pre cmd: {}\n'.format(cmd))
             os.system(cmd)
 
     def exec_wine_cmd(self):
         self.construct_wine_env()
         self.construct_wine_cmd()
         if args.show_cmd:
-            sys.stderr.write('executing wine command: {}\n'.format(self.wine_cmd))
+            sys.stderr.write('executing wine cmd: {}\n'.format(self.wine_cmd))
         os.system(self.wine_cmd)
 
     def exec_post_cmds(self):
         for cmd in self.post_cmds:
             if args.show_cmd:
-                sys.stderr.write('executing post command: {}\n'.format(cmd))
+                sys.stderr.write('executing post cmd: {}\n'.format(cmd))
             os.system(cmd)
+
+    def exec_native_cmd(self, cmd):
+        self.construct_wine_env()
+        cmd = '{} {}'.format(self.wine_env, cmd)
+        if args.show_cmd:
+            sys.stderr.write('executing post cmd: {}\n'.format(cmd))
+        os.system(cmd)
 
 
 def read_user_config(user_config, app=None):
@@ -103,6 +110,10 @@ if not app_config:
     sys.exit(1)
 
 runner = Runner(app_config)
+
+if args.native_cmd:
+    runner.exec_native_cmd(args.native_cmd)
+    sys.exit(0)
 
 log_dir = os.path.expanduser(args.log_dir)
 
