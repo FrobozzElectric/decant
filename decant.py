@@ -16,7 +16,7 @@ parser.add_argument('-c', '--config', default='{}/config.yml'.format(conf_dir),
                     help='config file location')
 parser.add_argument('-l', '--log-dir', default='{}/log'.format(conf_dir),
                     help='log directory location')
-parser.add_argument('-n', '--native-cmd', default=None,
+parser.add_argument('-n', '--native-cmd',
                     help='run native command in the chosen prefix and exit')
 parser.add_argument('-w', '--wine-cmd',
                     help='wine command to run in the chosen prefix')
@@ -31,7 +31,7 @@ class Runner:
         self.config = app_config
         self.wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
         self.pre_cmds = app_config.get('pre_cmd', [])
-        self.wine_cmd = '{}'.format(app_config['wine_cmd'])
+        self.wine_cmd = app_config['wine_cmd']
         self.post_cmds = app_config.get('post_cmd', [])
         self.log = None
 
@@ -106,7 +106,7 @@ if not args.app:
 app_config = read_user_config(config, app=args.app)
 
 if not app_config:
-    sys.stderr.write('app not found "{}"\n'.format(args.app))
+    sys.stderr.write('app not found: {}\n'.format(args.app))
     sys.exit(1)
 
 runner = Runner(app_config)
