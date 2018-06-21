@@ -33,6 +33,18 @@ Running `witcher-3` would look like:
 $ decant witcher-3
 ```
 
+If you're not sure what you have configured, run `decant` without any arguments and it will print out all the configured apps it knows about:
+
+```
+$ decant
+eye
+overwatch
+overwatch-launcher
+stalker-soc
+warframe
+witcher-3
+```
+
 My real configs are kept here for more examples: https://github.com/FrobozzElectric/decant-config
 
 ---
