@@ -20,6 +20,8 @@ parser.add_argument('-n', '--native-cmd',
                     help='run native command in the chosen prefix and exit')
 parser.add_argument('-w', '--wine-cmd',
                     help='wine command to run in the chosen prefix')
+parser.add_argument('-wa', '--wine-cmd-arg',
+                    help='arg(s) for the above wine command')
 parser.add_argument('-s', '--show-cmd', action='store_true',
                     help='show constructed wine command')
 args = parser.parse_args()
@@ -31,7 +33,7 @@ class Runner:
         self.config = app_config
         self.wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
         self.pre_cmds = app_config.get('pre_cmd', [])
-        self.wine_cmd = app_config['wine_cmd']
+        self.wine_cmd = app_config.get('wine_cmd', '')
         self.post_cmds = app_config.get('post_cmd', [])
         self.log = None
 
@@ -39,13 +41,18 @@ class Runner:
         for env in self.config.get('wine_env', []):
             self.wine_env += ' {}'.format(env)
 
-    def construct_wine_cmd(self):
+    def construct_wine_cmd(self, wine_cmd):
         cmd_base = '{} {} {} > {} 2>&1'
-        cmd = os.path.expanduser(self.wine_cmd)
+        if wine_cmd:
+            cmd = os.path.expanduser(wine_cmd)
+        else:
+            cmd = os.path.expanduser(self.wine_cmd)
         if not os.path.exists(cmd):
             sys.stderr.write('wine command not found: {}'.format(cmd))
             sys.exit(1)
-        if 'wine_cmd_arg' in self.config:
+        if args.wine_cmd_arg:
+            cmd = '"{}" {}'.format(cmd, args.wine_cmd_arg)
+        elif 'wine_cmd_arg' in self.config:
             cmd = '"{}" {}'.format(cmd, self.config['wine_cmd_arg'])
         else:
             cmd = '"{}"'.format(cmd)
@@ -58,9 +65,9 @@ class Runner:
                 sys.stderr.write('executing pre cmd: {}\n'.format(cmd))
             os.system(cmd)
 
-    def exec_wine_cmd(self):
+    def exec_wine_cmd(self, wine_cmd=None):
         self.construct_wine_env()
-        self.construct_wine_cmd()
+        self.construct_wine_cmd(wine_cmd)
         if args.show_cmd:
             sys.stderr.write('executing wine cmd: {}\n'.format(self.wine_cmd))
         os.system(self.wine_cmd)
@@ -121,6 +128,10 @@ if not os.path.exists(log_dir):
     os.makedirs(log_dir)
 
 runner.log = '{}/{}.log'.format(log_dir, args.app)
+
+if args.wine_cmd:
+    runner.exec_wine_cmd(args.wine_cmd)
+    sys.exit(0)
 
 runner.exec_pre_cmds()
 runner.exec_wine_cmd()
