@@ -32,6 +32,7 @@ class Runner:
     def __init__(self, app_config):
         self.config = app_config
         self.wine_env = 'WINEPREFIX={}'.format(app_config['wine_prefix'])
+        self.wine = app_config.get('wine', 'wine')
         self.pre_cmds = app_config.get('pre_cmd', [])
         self.wine_cmd = app_config.get('wine_cmd', '')
         self.post_cmds = app_config.get('post_cmd', [])
@@ -56,7 +57,7 @@ class Runner:
             cmd = '"{}" {}'.format(cmd, self.config['wine_cmd_arg'])
         else:
             cmd = '"{}"'.format(cmd)
-        cmd = cmd_base.format(self.wine_env, 'wine', cmd, self.log)
+        cmd = cmd_base.format(self.wine_env, self.wine, cmd, self.log)
         self.wine_cmd = cmd
 
     def exec_pre_cmds(self):
