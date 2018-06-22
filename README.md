@@ -1,5 +1,5 @@
 # What is decant?
-`decant` is a script for configuring your wine apps so they always run with the right `WINEPREFIX`, environment variables and .EXEs. Instead of remembering long incantations to launch a certain game, just configure it once with some YAML and run `decant configured-app-name`.
+`decant` is a script for configuring your wine apps so they always run with the right `WINEPREFIX`, environment variables and .EXEs. Instead of remembering long incantations to launch a certain game, you just have to configure it once with some YAML and run `decant configured-app-name`.
 
 # Installation
 ```
@@ -13,7 +13,7 @@ $ ./install.sh
 ```
 
 # App config
-The config file is located at `$XDG_CONFIG_HOME/decant/config.yml`. This is usually `~/.config/decant/config.yml` in reality. Only the fields `wine_prefix` and `wine_cmd` are required. The fields `pre_cmd`, `post_cmd` and `wine_env` are all lists that can have as many entries as needed.
+The config file is located at `$XDG_CONFIG_HOME/decant/config.yml`. In reality, this is usually `~/.config/decant/config.yml`. Only the fields `wine_prefix` and `wine_cmd` are required. The fields `pre_cmd`, `post_cmd` and `wine_env` are all lists that can have as many entries as needed.
 
 Here's a real life config example:
 
