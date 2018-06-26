@@ -53,7 +53,7 @@ class Runner:
             sys.exit(1)
         if args.wine_cmd_arg:
             cmd = '"{}" {}'.format(cmd, args.wine_cmd_arg)
-        elif 'wine_cmd_arg' in self.config:
+        elif 'wine_cmd_arg' in self.config and not args.wine_cmd:
             cmd = '"{}" {}'.format(cmd, self.config['wine_cmd_arg'])
         else:
             cmd = '"{}"'.format(cmd)
