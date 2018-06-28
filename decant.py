@@ -83,7 +83,7 @@ class Runner:
         self.construct_wine_env()
         cmd = '{} {}'.format(self.wine_env, cmd)
         if args.show_cmd:
-            sys.stderr.write('executing post cmd: {}\n'.format(cmd))
+            sys.stderr.write('executing native cmd: {}\n'.format(cmd))
         os.system(cmd)
 
 
