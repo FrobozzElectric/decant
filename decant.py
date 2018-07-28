@@ -71,7 +71,10 @@ class Runner:
         self.construct_wine_cmd(wine_cmd)
         if args.show_cmd:
             sys.stderr.write('executing wine cmd: {}\n'.format(self.wine_cmd))
-        os.system(self.wine_cmd)
+        try:
+            os.system(self.wine_cmd)
+        except KeyboardInterrupt:
+            os.system('pkill -f .exe')
 
     def exec_post_cmds(self):
         for cmd in self.post_cmds:
